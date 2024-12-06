@@ -8,7 +8,7 @@ GO
 -- Crear las tablas
 
 CREATE TABLE alergia (
-    id_alergia                INT NOT NULL,
+    id_alergia                INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
     nombrealergia             VARCHAR(255),
     tipoalergia_tipoalergiaid INT NOT NULL
 );
@@ -22,7 +22,7 @@ CREATE TABLE ano (
 ALTER TABLE ano ADD CONSTRAINT ano_pk PRIMARY KEY (ano);
 
 CREATE TABLE apacheaps (
-    apacheapsid            INT NOT NULL,
+    apacheapsid            INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
     intubado               INT NOT NULL,
     ventilado              INT NOT NULL,
     frecuenciarespiratoria FLOAT NOT NULL,
@@ -35,14 +35,14 @@ CREATE TABLE apacheaps (
 ALTER TABLE apacheaps ADD CONSTRAINT apacheaps_pk PRIMARY KEY (apacheapsid);
 
 CREATE TABLE categoriahospital (
-    categoriaid INT NOT NULL,
+    categoriaid INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
     tamano      VARCHAR(200)
 );
 
 ALTER TABLE categoriahospital ADD CONSTRAINT categoriahospital_pk PRIMARY KEY (categoriaid);
 
 CREATE TABLE cuidadoresp (
-    cuidadoid           INT NOT NULL,
+    cuidadoid           INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
     iniciousoventilador INT,
     finusoventilador    INT,
     tipoviaaerea        VARCHAR(30),
@@ -53,7 +53,7 @@ CREATE TABLE cuidadoresp (
 ALTER TABLE cuidadoresp ADD CONSTRAINT cuidadoresp_pk PRIMARY KEY (cuidadoid);
 
 CREATE TABLE diagadmision (
-    diagadid          INT NOT NULL,
+    diagadid          INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
     nombrediagnostico VARCHAR(255),
     offsetentradadx   INT
 );
@@ -61,7 +61,7 @@ CREATE TABLE diagadmision (
 ALTER TABLE diagadmision ADD CONSTRAINT diagadmision_pk PRIMARY KEY (diagadid);
 
 CREATE TABLE diagnostico (
-    diagnosticoid          INT NOT NULL,
+    diagnosticoid          INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
     descripciondiagnostico VARCHAR(200) NOT NULL,
     codigoicd9             VARCHAR(100) NOT NULL,
     prioridaddiagnostico   VARCHAR(10) NOT NULL
@@ -70,7 +70,7 @@ CREATE TABLE diagnostico (
 ALTER TABLE diagnostico ADD CONSTRAINT diagnostico_pk PRIMARY KEY (diagnosticoid);
 
 CREATE TABLE hospital (
-    hospitalid                    INT NOT NULL,
+    hospitalid                    INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
     categoriahospital_categoriaid INT NOT NULL,
     region_regionid               INT NOT NULL
 );
@@ -92,13 +92,13 @@ CREATE TABLE ingresos_uci (
     diagadmision_diagadid        INT NOT NULL,
     cuidadoresp_cuidadoid        INT NOT NULL,
     apacheaps_apacheapsid        INT NOT NULL,
-    ingresos_uci_id              INT NOT NULL -- Modificado a INT en lugar de NUMBER
+    ingresos_uci_id              INT IDENTITY(1,1) NOT NULL -- Modificado a IDENTITY
 );
 
 ALTER TABLE ingresos_uci ADD CONSTRAINT ingresos_uci_pk PRIMARY KEY (ingresos_uci_id);
 
 CREATE TABLE medicacion (
-    medicamentoid     INT NOT NULL,
+    medicamentoid     INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
     nombremedicamento VARCHAR(255) NOT NULL,
     dosis             VARCHAR(400) NOT NULL,
     frecuencia        VARCHAR(255) NOT NULL
@@ -107,7 +107,7 @@ CREATE TABLE medicacion (
 ALTER TABLE medicacion ADD CONSTRAINT medicacion_pk PRIMARY KEY (medicamentoid);
 
 CREATE TABLE paciente (
-    pacienteid        INT NOT NULL,
+    pacienteid        INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
     pacienteingresoid INT NOT NULL,
     genero            VARCHAR(25) NOT NULL,
     etnicidad         VARCHAR(50) NOT NULL,
@@ -118,14 +118,14 @@ CREATE TABLE paciente (
 ALTER TABLE paciente ADD CONSTRAINT paciente_pk PRIMARY KEY (pacienteid);
 
 CREATE TABLE patologia (
-    patologiaid     INT NOT NULL,
+    patologiaid     INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
     nombrepatologia VARCHAR(255)
 );
 
 ALTER TABLE patologia ADD CONSTRAINT patologia_pk PRIMARY KEY (patologiaid);
 
 CREATE TABLE region (
-    regionid INT NOT NULL,
+    regionid INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
     region   INT NOT NULL
 );
 
@@ -160,7 +160,7 @@ CREATE TABLE relation_9 (
 ALTER TABLE relation_9 ADD CONSTRAINT relation_9_pk PRIMARY KEY (patologia_patologiaid, ingresos_uci_ingresos_uci_id);
 
 CREATE TABLE tipoalergia (
-    tipoalergiaid INT NOT NULL,
+    tipoalergiaid INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
     tipoalergia   VARCHAR(255) NOT NULL
 );
 
