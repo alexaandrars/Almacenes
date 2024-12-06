@@ -1,0 +1,205 @@
+USE ProyectoAlmacenesDW
+GO
+
+-- Crear las tablas necesarias
+CREATE TABLE alergia (
+    id_alergia INT NOT NULL PRIMARY KEY,
+    nombrealergia VARCHAR(255),
+    tipoalergia_tipoalergiaid INT NOT NULL
+);
+
+CREATE TABLE ano (
+    ano SMALLINT NOT NULL PRIMARY KEY
+);
+
+CREATE TABLE apacheaps (
+    apacheapsid INT NOT NULL PRIMARY KEY,
+    intubado BIT NOT NULL,
+    ventilado BIT NOT NULL,
+    frecuenciarespiratoria FLOAT NOT NULL,
+    fio2 FLOAT NOT NULL,
+    pao2 FLOAT NOT NULL,
+    pco2 FLOAT NOT NULL,
+    ph FLOAT NOT NULL
+);
+
+CREATE TABLE categoriahospital (
+    categoriaid INT NOT NULL PRIMARY KEY,
+    tamano VARCHAR(200)
+);
+
+CREATE TABLE cuidadoresp (
+    cuidadoid INT NOT NULL PRIMARY KEY,
+    iniciousoventilador INT,
+    finusoventilador INT,
+    tipoviaaerea VARCHAR(30),
+    tamanoviaaerea VARCHAR(10),
+    posicionviaaerea VARCHAR(32)
+);
+
+CREATE TABLE diagadmision (
+    diagadid INT NOT NULL PRIMARY KEY,
+    nombrediagnostico VARCHAR(255),
+    offsetentradadx INT
+);
+
+CREATE TABLE diagnostico (
+    diagnosticoid INT NOT NULL PRIMARY KEY,
+    descripciondiagnostico VARCHAR(200) NOT NULL,
+    codigoicd9 VARCHAR(100) NOT NULL,
+    prioridaddiagnostico VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE hospital (
+    hospitalid INT NOT NULL PRIMARY KEY,
+    categoriahospital_categoriaid INT NOT NULL,
+    region_regionid INT NOT NULL
+);
+
+CREATE TABLE ingresos_uci (
+    ingresos_uci_id INT NOT NULL PRIMARY KEY DEFAULT NEXT VALUE FOR ingresos_uci_ingresos_uci_id_seq,
+    duracion_de_la_estancia VARCHAR(4000),
+    estado_del_alta VARCHAR(4000),
+    cantidad_de_ingresos INT,
+    uso_de_ventilacion_mecanica CHAR(1),
+    puntaje_de_severidad VARCHAR(4000),
+    tasa_de_ventilacion_mecanica INT,
+    mortalidad INT,
+    reingresos INT,
+    paciente_pacienteid INT NOT NULL,
+    hospital_hospitalid INT NOT NULL,
+    ano_ano SMALLINT NOT NULL,
+    diagadmision_diagadid INT NOT NULL,
+    cuidadoresp_cuidadoid INT NOT NULL,
+    apacheaps_apacheapsid INT NOT NULL
+);
+
+CREATE TABLE medicacion (
+    medicamentoid INT NOT NULL PRIMARY KEY,
+    nombremedicamento VARCHAR(255) NOT NULL,
+    dosis VARCHAR(400) NOT NULL,
+    frecuencia VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE paciente (
+    pacienteid INT NOT NULL PRIMARY KEY,
+    pacienteingresoid INT NOT NULL,
+    genero VARCHAR(25) NOT NULL,
+    etnicidad VARCHAR(50) NOT NULL,
+    edad VARCHAR(10) NOT NULL,
+    pesoingreso DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE patologia (
+    patologiaid INT NOT NULL PRIMARY KEY,
+    nombrepatologia VARCHAR(255)
+);
+
+CREATE TABLE region (
+    regionid INT NOT NULL PRIMARY KEY,
+    region INT NOT NULL
+);
+
+CREATE TABLE relation_10 (
+    medicacion_medicamentoid INT NOT NULL,
+    ingresos_uci_ingresos_uci_id INT NOT NULL,
+    PRIMARY KEY (medicacion_medicamentoid, ingresos_uci_ingresos_uci_id)
+);
+
+CREATE TABLE relation_13 (
+    ingresos_uci_ingresos_uci_id INT NOT NULL,
+    alergia_id_alergia INT NOT NULL,
+    PRIMARY KEY (ingresos_uci_ingresos_uci_id, alergia_id_alergia)
+);
+
+CREATE TABLE relation_20 (
+    ingresos_uci_ingresos_uci_id INT NOT NULL,
+    diagnostico_diagnosticoid INT NOT NULL,
+    PRIMARY KEY (ingresos_uci_ingresos_uci_id, diagnostico_diagnosticoid)
+);
+
+CREATE TABLE relation_9 (
+    patologia_patologiaid INT NOT NULL,
+    ingresos_uci_ingresos_uci_id INT NOT NULL,
+    PRIMARY KEY (patologia_patologiaid, ingresos_uci_ingresos_uci_id)
+);
+
+CREATE TABLE tipoalergia (
+    tipoalergiaid INT NOT NULL PRIMARY KEY,
+    tipoalergia VARCHAR(255) NOT NULL
+);
+
+-- Relaciones (Llaves Foráneas)
+ALTER TABLE alergia
+    ADD CONSTRAINT fk_alergia_tipoalergia FOREIGN KEY (tipoalergia_tipoalergiaid)
+    REFERENCES tipoalergia (tipoalergiaid);
+
+ALTER TABLE hospital
+    ADD CONSTRAINT fk_hospital_categoriahospital FOREIGN KEY (categoriahospital_categoriaid)
+    REFERENCES categoriahospital (categoriaid);
+
+ALTER TABLE hospital
+    ADD CONSTRAINT fk_hospital_region FOREIGN KEY (region_regionid)
+    REFERENCES region (regionid);
+
+ALTER TABLE ingresos_uci
+    ADD CONSTRAINT fk_ingresos_uci_ano FOREIGN KEY (ano_ano)
+    REFERENCES ano (ano);
+
+ALTER TABLE ingresos_uci
+    ADD CONSTRAINT fk_ingresos_uci_apacheaps FOREIGN KEY (apacheaps_apacheapsid)
+    REFERENCES apacheaps (apacheapsid);
+
+ALTER TABLE ingresos_uci
+    ADD CONSTRAINT fk_ingresos_uci_cuidadoresp FOREIGN KEY (cuidadoresp_cuidadoid)
+    REFERENCES cuidadoresp (cuidadoid);
+
+ALTER TABLE ingresos_uci
+    ADD CONSTRAINT fk_ingresos_uci_diagadmision FOREIGN KEY (diagadmision_diagadid)
+    REFERENCES diagadmision (diagadid);
+
+ALTER TABLE ingresos_uci
+    ADD CONSTRAINT fk_ingresos_uci_hospital FOREIGN KEY (hospital_hospitalid)
+    REFERENCES hospital (hospitalid);
+
+ALTER TABLE ingresos_uci
+    ADD CONSTRAINT fk_ingresos_uci_paciente FOREIGN KEY (paciente_pacienteid)
+    REFERENCES paciente (pacienteid);
+
+ALTER TABLE relation_10
+    ADD CONSTRAINT fk_relation_10_ingresos_uci FOREIGN KEY (ingresos_uci_ingresos_uci_id)
+    REFERENCES ingresos_uci (ingresos_uci_id);
+
+ALTER TABLE relation_10
+    ADD CONSTRAINT fk_relation_10_medicacion FOREIGN KEY (medicacion_medicamentoid)
+    REFERENCES medicacion (medicamentoid);
+
+ALTER TABLE relation_13
+    ADD CONSTRAINT fk_relation_13_alergia FOREIGN KEY (alergia_id_alergia)
+    REFERENCES alergia (id_alergia);
+
+ALTER TABLE relation_13
+    ADD CONSTRAINT fk_relation_13_ingresos_uci FOREIGN KEY (ingresos_uci_ingresos_uci_id)
+    REFERENCES ingresos_uci (ingresos_uci_id);
+
+ALTER TABLE relation_20
+    ADD CONSTRAINT fk_relation_20_diagnostico FOREIGN KEY (diagnostico_diagnosticoid)
+    REFERENCES diagnostico (diagnosticoid);
+
+ALTER TABLE relation_20
+    ADD CONSTRAINT fk_relation_20_ingresos_uci FOREIGN KEY (ingresos_uci_ingresos_uci_id)
+    REFERENCES ingresos_uci (ingresos_uci_id);
+
+ALTER TABLE relation_9
+    ADD CONSTRAINT fk_relation_9_patologia FOREIGN KEY (patologia_patologiaid)
+    REFERENCES patologia (patologiaid);
+
+ALTER TABLE relation_9
+    ADD CONSTRAINT fk_relation_9_ingresos_uci FOREIGN KEY (ingresos_uci_ingresos_uci_id)
+    REFERENCES ingresos_uci (ingresos_uci_id);
+
+-- Secuencia
+CREATE SEQUENCE ingresos_uci_ingresos_uci_id_seq
+    START WITH 1
+    INCREMENT BY 1;
+
