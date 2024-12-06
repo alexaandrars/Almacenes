@@ -15,8 +15,9 @@ CREATE TABLE alergia (
 
 ALTER TABLE alergia ADD CONSTRAINT alergia_pk PRIMARY KEY (id_alergia);
 
-CREATE TABLE ano (
-    ano SMALLINT NOT NULL
+CREATE TABLE dbo.ano (
+    id INT IDENTITY(1,1) PRIMARY KEY,  -- id autoincremental
+    ano SMALLINT NOT NULL               -- año como atributo
 );
 
 ALTER TABLE ano ADD CONSTRAINT ano_pk PRIMARY KEY (ano);
