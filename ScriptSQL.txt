@@ -127,7 +127,7 @@ ALTER TABLE patologia ADD CONSTRAINT patologia_pk PRIMARY KEY (patologiaid);
 
 CREATE TABLE region (
     regionid INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
-    region   INT NOT NULL
+    region   VARCHAR(64) NOT NULL
 );
 
 ALTER TABLE region ADD CONSTRAINT region_pk PRIMARY KEY (regionid);
