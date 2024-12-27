@@ -7,23 +7,26 @@ GO
 
 -- Crear las tablas
 
+CREATE TABLE tipoalergia (
+    tipoalergiaid INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
+    tipoalergia   VARCHAR(255) NOT NULL,
+    CONSTRAINT tipoalergia_pk PRIMARY KEY (tipoalergiaid) -- Definir clave primaria aquí
+);
+
+
 CREATE TABLE alergia (
-    id_alergia                INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
+    id_alergia                INT IDENTITY(1,1) NOT NULL, -- IDENTITY actúa como clave primaria
     nombrealergia             VARCHAR(255),
     tipoalergia_tipoalergiaid INT NOT NULL
 );
 
-ALTER TABLE alergia ADD CONSTRAINT alergia_pk PRIMARY KEY (id_alergia);
-
 CREATE TABLE dbo.ano (
-    id_tiempo INT IDENTITY(1,1) PRIMARY KEY,  -- id autoincremental
+    id_tiempo INT IDENTITY(1,1) PRIMARY KEY,  -- id autoincremental como clave primaria
     ano SMALLINT NOT NULL               -- año como atributo
 );
 
-ALTER TABLE ano ADD CONSTRAINT ano_pk PRIMARY KEY (ano);
-
 CREATE TABLE apacheaps (
-    apacheapsid            INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
+    apacheapsid            INT IDENTITY(1,1) NOT NULL, -- IDENTITY actúa como clave primaria
     intubado               INT NOT NULL,
     ventilado              INT NOT NULL,
     frecuenciarespiratoria FLOAT NOT NULL,
@@ -33,17 +36,13 @@ CREATE TABLE apacheaps (
     ph                     FLOAT NOT NULL
 );
 
-ALTER TABLE apacheaps ADD CONSTRAINT apacheaps_pk PRIMARY KEY (apacheapsid);
-
 CREATE TABLE categoriahospital (
-    categoriaid INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
+    categoriaid INT IDENTITY(1,1) NOT NULL, -- IDENTITY actúa como clave primaria
     tamano      VARCHAR(200)
 );
 
-ALTER TABLE categoriahospital ADD CONSTRAINT categoriahospital_pk PRIMARY KEY (categoriaid);
-
 CREATE TABLE cuidadoresp (
-    cuidadoid           INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
+    cuidadoid           INT IDENTITY(1,1) NOT NULL, -- IDENTITY actúa como clave primaria
     iniciousoventilador INT,
     finusoventilador    INT,
     tipoviaaerea        VARCHAR(30),
@@ -51,32 +50,24 @@ CREATE TABLE cuidadoresp (
     posicionviaaerea    VARCHAR(32)
 );
 
-ALTER TABLE cuidadoresp ADD CONSTRAINT cuidadoresp_pk PRIMARY KEY (cuidadoid);
-
 CREATE TABLE diagadmision (
-    diagadid          INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
+    diagadid          INT IDENTITY(1,1) NOT NULL, -- IDENTITY actúa como clave primaria
     nombrediagnostico VARCHAR(255),
     offsetentradadx   INT
 );
 
-ALTER TABLE diagadmision ADD CONSTRAINT diagadmision_pk PRIMARY KEY (diagadid);
-
 CREATE TABLE diagnostico (
-    diagnosticoid          INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
+    diagnosticoid          INT IDENTITY(1,1) NOT NULL, -- IDENTITY actúa como clave primaria
     descripciondiagnostico VARCHAR(200) NOT NULL,
     codigoicd9             VARCHAR(100) NOT NULL,
     prioridaddiagnostico   VARCHAR(10) NOT NULL
 );
 
-ALTER TABLE diagnostico ADD CONSTRAINT diagnostico_pk PRIMARY KEY (diagnosticoid);
-
 CREATE TABLE hospital (
-    hospitalid                    INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
+    hospitalid                    INT IDENTITY(1,1) NOT NULL, -- IDENTITY actúa como clave primaria
     categoriahospital_categoriaid INT NOT NULL,
     region_regionid               INT NOT NULL
 );
-
-ALTER TABLE hospital ADD CONSTRAINT hospital_pk PRIMARY KEY (hospitalid);
 
 CREATE TABLE ingresos_uci (
     duracion_de_la_estancia      VARCHAR(4000),
@@ -93,22 +84,18 @@ CREATE TABLE ingresos_uci (
     diagadmision_diagadid        INT NOT NULL,
     cuidadoresp_cuidadoid        INT NOT NULL,
     apacheaps_apacheapsid        INT NOT NULL,
-    ingresos_uci_id              INT IDENTITY(1,1) NOT NULL -- Modificado a IDENTITY
+    ingresos_uci_id              INT IDENTITY(1,1) NOT NULL -- IDENTITY actúa como clave primaria
 );
 
-ALTER TABLE ingresos_uci ADD CONSTRAINT ingresos_uci_pk PRIMARY KEY (ingresos_uci_id);
-
 CREATE TABLE medicacion (
-    medicamentoid     INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
+    medicamentoid     INT IDENTITY(1,1) NOT NULL, -- IDENTITY actúa como clave primaria
     nombremedicamento VARCHAR(255) NOT NULL,
     dosis             VARCHAR(400) NOT NULL,
     frecuencia        VARCHAR(255) NOT NULL
 );
 
-ALTER TABLE medicacion ADD CONSTRAINT medicacion_pk PRIMARY KEY (medicamentoid);
-
 CREATE TABLE paciente (
-    pacienteid        INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
+    pacienteid        INT IDENTITY(1,1) NOT NULL, -- IDENTITY actúa como clave primaria
     pacienteingresoid INT NOT NULL,
     genero            VARCHAR(25) NOT NULL,
     etnicidad         VARCHAR(50) NOT NULL,
@@ -116,56 +103,40 @@ CREATE TABLE paciente (
     pesoingreso       DECIMAL(10, 2) NOT NULL
 );
 
-ALTER TABLE paciente ADD CONSTRAINT paciente_pk PRIMARY KEY (pacienteid);
-
 CREATE TABLE patologia (
-    patologiaid     INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
+    patologiaid     INT IDENTITY(1,1) NOT NULL, -- IDENTITY actúa como clave primaria
     nombrepatologia VARCHAR(255)
 );
 
-ALTER TABLE patologia ADD CONSTRAINT patologia_pk PRIMARY KEY (patologiaid);
-
 CREATE TABLE region (
-    regionid INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
+    regionid INT IDENTITY(1,1) NOT NULL, -- IDENTITY actúa como clave primaria
     region   VARCHAR(64) NOT NULL
 );
-
-ALTER TABLE region ADD CONSTRAINT region_pk PRIMARY KEY (regionid);
 
 CREATE TABLE relation_10 (
     medicacion_medicamentoid     INT NOT NULL,
     ingresos_uci_ingresos_uci_id INT NOT NULL
 );
 
-ALTER TABLE relation_10 ADD CONSTRAINT relation_10_pk PRIMARY KEY (medicacion_medicamentoid, ingresos_uci_ingresos_uci_id);
-
 CREATE TABLE relation_13 (
     ingresos_uci_ingresos_uci_id INT NOT NULL,
     alergia_id_alergia           INT NOT NULL
 );
-
-ALTER TABLE relation_13 ADD CONSTRAINT relation_13_pk PRIMARY KEY (ingresos_uci_ingresos_uci_id, alergia_id_alergia);
 
 CREATE TABLE relation_20 (
     ingresos_uci_ingresos_uci_id INT NOT NULL,
     diagnostico_diagnosticoid    INT NOT NULL
 );
 
-ALTER TABLE relation_20 ADD CONSTRAINT relation_20_pk PRIMARY KEY (ingresos_uci_ingresos_uci_id, diagnostico_diagnosticoid);
-
 CREATE TABLE relation_9 (
     patologia_patologiaid        INT NOT NULL,
     ingresos_uci_ingresos_uci_id INT NOT NULL
 );
 
-ALTER TABLE relation_9 ADD CONSTRAINT relation_9_pk PRIMARY KEY (patologia_patologiaid, ingresos_uci_ingresos_uci_id);
-
 CREATE TABLE tipoalergia (
-    tipoalergiaid INT IDENTITY(1,1) NOT NULL, -- Modificado a IDENTITY
+    tipoalergiaid INT IDENTITY(1,1) NOT NULL, -- IDENTITY actúa como clave primaria
     tipoalergia   VARCHAR(255) NOT NULL
 );
-
-ALTER TABLE tipoalergia ADD CONSTRAINT tipoalergia_pk PRIMARY KEY (tipoalergiaid);
 
 -- Definición de claves foráneas
 ALTER TABLE alergia
@@ -235,14 +206,5 @@ ALTER TABLE relation_9
 ALTER TABLE relation_9
     ADD CONSTRAINT relation_9_patologia_fk FOREIGN KEY (patologia_patologiaid)
         REFERENCES patologia (patologiaid);
-
--- Secuencia en SQL Server (reemplaza el uso de secuencias de Oracle)
-CREATE SEQUENCE ingresos_uci_ingresos_uci_id_seq
-    AS INT
-    START WITH 1
-    INCREMENT BY 1;
-
--- El valor de la secuencia se obtiene con la función NEXT VALUE
--- No es necesario un TRIGGER en SQL Server, ya que se puede definir un campo AUTO_INCREMENT o usar la secuencia directamente.
 
 -- Fin del script
