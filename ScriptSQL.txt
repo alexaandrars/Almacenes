@@ -81,7 +81,7 @@ CREATE TABLE ingresos_uci (
     TipoDeIngreso                NVARCHAR(50) NULL,
     paciente_pacienteid          INT NOT NULL,
     hospital_hospitalid          INT NOT NULL,
-    ano_ano                      SMALLINT NOT NULL,
+    tiempo_tiempoid              INT NOT NULL,
     diagadmision_diagadid        INT NOT NULL,
     cuidadoresp_cuidadoid        INT NOT NULL,
     apacheaps_apacheapsid        INT NOT NULL,
