@@ -70,20 +70,22 @@ CREATE TABLE hospital (
 );
 
 CREATE TABLE ingresos_uci (
-    duracion_de_la_estancia      VARCHAR(4000),
-    estado_del_alta              VARCHAR(4000),
     cantidad_de_ingresos         INT,
     uso_de_ventilacion_mecanica  CHAR(1),
     puntaje_de_severidad         VARCHAR(4000),
     tasa_de_ventilacion_mecanica INT,
-    mortalidad                   INT,
-    reingresos                   INT,
+    TotalDiagnosticosUnicos      INT NOT NULL,
+    RankingIngresoHospital       INT NULL,
+	TotalPacientesUnicos         INT NULL,
+	TotalIngresoHospital         INT NULL,
+    TipoDeIngreso                NVARCHAR(50) NULL,
     paciente_pacienteid          INT NOT NULL,
     hospital_hospitalid          INT NOT NULL,
     ano_ano                      SMALLINT NOT NULL,
     diagadmision_diagadid        INT NOT NULL,
     cuidadoresp_cuidadoid        INT NOT NULL,
     apacheaps_apacheapsid        INT NOT NULL,
+    diagnosticoid                INT NOT NULL,
     ingresos_uci_id              INT IDENTITY(1,1) NOT NULL -- IDENTITY actúa como clave primaria
 );
 
