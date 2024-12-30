@@ -1,0 +1,95 @@
+-- CONSULTA 1: El resultado muestra cuántos ingresos hospitalarios están asociados a cada tipo de alergia.
+WITH 
+  MEMBER [Measures].[Número de ingresos por tipo de alergia] AS 
+    [Measures].[Recuento Relation 13]
+SELECT 
+  [Measures].[Número de ingresos por tipo de alergia] ON COLUMNS,
+  [Alergia].[TipoAlergia].MEMBERS ON ROWS
+FROM 
+  [Proyecto Almacenes DW];
+
+-- CONSULTA 2: El resultado muestra cuantos ingresos hospitalarios están asociados a cada año.
+WITH 
+  MEMBER [Measures].[Número de ingresos por año] AS 
+    [Measures].[Recuento Ingresos Uci]
+SELECT 
+  [Measures].[Número de ingresos por año] ON COLUMNS, 
+  [Ano].[Ano].MEMBERS ON ROWS
+FROM [Proyecto Almacenes DW];
+
+-- CONSULTA 3: El resultado muestra el promedio de Uso de Ventilacion Mecanica por Año
+WITH 
+  MEMBER [Measures].[Promedio Uso de Ventilación Mecánica] AS 
+    [Measures].[Uso De Ventilacion Mecanica] 
+    / [Measures].[Recuento Ingresos Uci]  -- Dividimos la métrica de ventilación por la de ingresos
+
+SELECT 
+  {[Measures].[Promedio Uso de Ventilación Mecánica]} ON COLUMNS, 
+  [Ano].[Ano].MEMBERS ON ROWS  -- Los años en las filas
+FROM [Proyecto Almacenes DW];
+
+-- CONSULTA 4: El resultado muestra el promedio de Puntaje de Severidad por Año
+WITH 
+  MEMBER [Measures].[Promedio Puntaje De Severidad] AS 
+    [Measures].[Puntaje De Severidad] 
+    / [Measures].[Recuento Ingresos Uci]  -- Dividimos la métrica de ventilación por la de ingresos
+
+SELECT 
+  {[Measures].[Promedio Puntaje De Severidad]} ON COLUMNS, 
+  [Ano].[Ano].MEMBERS ON ROWS  -- Los años en las filas
+FROM [Proyecto Almacenes DW];
+
+
+-- CONSULTA 5: El resultado muestra los ingresos de UCI asociados a cada medicamento
+WITH 
+  MEMBER [Measures].[Número de ingresos por medicación] AS 
+    [Measures].[Recuento Relation 10]  -- Aquí usamos la medida que representa la relación entre medicación e ingresos de UCI
+
+SELECT 
+  [Measures].[Número de ingresos por medicación] ON COLUMNS,  -- Mostramos los ingresos por medicación
+  [Medicacion].[Nombremedicamento].MEMBERS ON ROWS  -- Agrupamos por el nombre de la medicación
+FROM 
+  [Proyecto Almacenes DW];
+
+
+
+-- CONSULTA 6: El resultado muestra los Ids de los pacientes con el Puntaje de Severidad más altos.
+WITH 
+  MEMBER [Measures].[MaxPuntaje] AS 
+    MAX(
+      [Paciente].[PacienteID].[PacienteID].MEMBERS, 
+      [Measures].[Puntaje de Severidad]
+    ) -- Calcula el puntaje máximo
+
+SELECT 
+  {[Measures].[Puntaje de Severidad]} ON COLUMNS, 
+  NON EMPTY 
+    FILTER(
+      [Paciente].[PacienteID].[PacienteID].MEMBERS, 
+      [Measures].[Puntaje de Severidad] = 3 -- Filtra únicamente los pacientes con puntaje 3
+    ) ON ROWS
+FROM [Proyecto Almacenes DW];
+
+
+-- CONSULTA 7: El resultado muestra la cantidad de ingresos totales por región del hospital ordenando los valores de forma descendente.
+SELECT 
+  [Measures].[Recuento Ingresos Uci] ON COLUMNS, 
+  ORDER(
+    [Hospital].[Region].MEMBERS, 
+    [Measures].[Recuento Ingresos Uci], 
+    BDESC
+  ) ON ROWS
+FROM [Proyecto Almacenes DW];
+
+-- CONSULTA 8: El resultado muestra  el puntaje de severidad para cada combinación de los atributos Fio2, Frecuenciarespiratoria, y Pao2 de la dimensión Apacheaps.
+SELECT 
+  [Measures].[Puntaje de Severidad] ON COLUMNS,  -- Mostramos el Puntaje de Severidad
+  NON EMPTY 
+    [Apacheaps].[Fio2].MEMBERS * 
+    [Apacheaps].[Frecuenciarespiratoria].MEMBERS * 
+    [Apacheaps].[Pao2].MEMBERS ON ROWS  -- Agrupamos por los atributos Fio2, FrecuenciaRespiratoria y Pao2
+FROM 
+  [Proyecto Almacenes DW];
+
+
+
